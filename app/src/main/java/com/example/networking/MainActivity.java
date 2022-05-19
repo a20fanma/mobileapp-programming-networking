@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -19,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     private final String JSON_URL = "https://mobprog.webug.se/json-api?login=brom";
     private final String JSON_FILE = "mountains.json";
 
+    RecyclerView mountainRecyclerView;
+    private MountainAdapter adapter;
+    private ArrayList<Mountain> mountainArrayList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +34,13 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
         new JsonFile(this, this).execute(JSON_FILE); /* Läser in en textfil */
         new JsonTask(this).execute(JSON_URL); /*Läser in en URL*/
+
+        mountainRecyclerView = findViewById(R.id.recycler_view);
+        mountainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MountainAdapter(this, mountainArrayList);
+        mountainRecyclerView.setAdapter(adapter);
+        mountainRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
     }
 
     @Override
